@@ -1,0 +1,6 @@
+br/com/joaomassan/transfer/Transaction.class
+br/com/joaomassan/transfer/TransactionType.class
+br/com/joaomassan/transfer/Customer.class
+br/com/joaomassan/transfer/Account.class
+br/com/joaomassan/transfer/App.class
+br/com/joaomassan/transfer/App$MyHandler.class
