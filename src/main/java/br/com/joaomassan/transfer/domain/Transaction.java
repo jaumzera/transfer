@@ -4,6 +4,8 @@ import lombok.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Objects;
 
 @Value
@@ -80,7 +82,7 @@ public class Transaction implements Comparable<Transaction> {
 
       return new Transaction(
           identifier == null
-            ? now.toString()
+            ? String.valueOf(now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
             : identifier,
           type,
           now,

@@ -4,18 +4,29 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.util.List;
+
+import static java.net.HttpURLConnection.HTTP_CREATED;
+import static java.net.HttpURLConnection.HTTP_OK;
 
 @Path("/accounts")
 public class AccountController {
 
-  private AccountService accountService = new AccountService();
+  private AccountService accountService = AccountService.getInstance();
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createAccount(AccountCreationRequest request) {
     accountService.createAccount(request);
-    return Response.status(201).build();
+    return Response.status(HTTP_CREATED).build();
+  }
+
+  @GET
+  @Path("/{accountId}/transactions")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<String> getTransactions(@PathParam( "accountId") Long accountId) {
+    return accountService.getTransactions(accountId);
   }
 
   @GET
@@ -26,31 +37,29 @@ public class AccountController {
   }
 
   @PUT
-  @Path("/{accountId}/debit")
+  @Path("/debit")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response take(OperationRequest request) {
     accountService.take(request.getAccountId(), request.getValue());
-    return Response.status(200).build();
+    return Response.status(HTTP_OK).build();
   }
 
   @PUT
-  @Path("/{accountId}/credit")
+  @Path("/credit")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response put(OperationRequest request) {
     accountService.put(request.getAccountId(), request.getValue());
-    return Response.status(201).build();
+    return Response.status(HTTP_OK).build();
   }
 
   @PUT
-  @Path("/{accountId}/transfer")
+  @Path("/transfer")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response put(TransferRequest request) {
+  public Response transfer(TransferRequest request) {
     accountService.transfer(request);
-    return Response.status(201).build();
+    return Response.status(HTTP_OK).build();
   }
-
-
 }

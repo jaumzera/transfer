@@ -1,23 +1,22 @@
 package br.com.joaomassan.transfer.domain;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(of = "customer")
+@ToString(of = {"id", "initialValue"})
 public class Account {
 
   private static final int DEFAULT_SCALE = 2;
 
   private static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_DOWN;
+
+  private static final String TRANSACTIONS_TEMPLATE = "[%s] [%s] %.2f %s";
 
   private static long nextId = 1;
 
@@ -102,5 +101,18 @@ public class Account {
       changed();
     }
     return value;
+  }
+
+  public List<String> getTransactions() {
+    return transactions
+        .stream()
+        .sorted(Comparator.comparing(Transaction::getTime))
+        .map(item -> String.format(
+            TRANSACTIONS_TEMPLATE,
+            item.getTime().toString(),
+            item.getType(),
+            item.getValue(),
+            item.getIdentifier()))
+        .collect(Collectors.toList());
   }
 }
