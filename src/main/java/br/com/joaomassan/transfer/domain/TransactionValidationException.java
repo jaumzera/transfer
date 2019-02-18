@@ -6,7 +6,7 @@ public class TransactionValidationException extends RuntimeException {
     super(message);
   }
 
-  public static TransactionValidationException notAVAlidAmount() {
+  public static TransactionValidationException notAValidAmount() {
     return new TransactionValidationException("Not a valid amount");
   }
 }

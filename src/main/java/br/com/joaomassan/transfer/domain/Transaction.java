@@ -68,7 +68,7 @@ public class Transaction implements Comparable<Transaction> {
 
     TransactionBuilder value(BigDecimal value) {
       if(Objects.requireNonNull(value, "Value cannot be null").signum() < 0) {
-        throw TransactionValidationException.notAVAlidAmount();
+        throw TransactionValidationException.notAValidAmount();
       }
 
       this.value = value;

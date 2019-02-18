@@ -1,29 +1,26 @@
 package br.com.joaomassan.transfer;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
+import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
+import java.net.URI;
 
 public class App {
 
-  public static void main(String[] args) throws IOException {
-    HttpServer server = HttpServer.create(new InetSocketAddress(8090), 0);
-    server.createContext("/", new MyHandler());
-    server.setExecutor(null); // creates a default executor
-    server.start();
+  public static final String BASE_URI = "http://localhost:8080/";
+
+  public static HttpServer startServer() {
+     ResourceConfig rc = new ResourceConfig().packages("br.com.joaomassan.transfer.service");
+    return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
   }
 
-  static class MyHandler implements HttpHandler {
-    public void handle(HttpExchange t) throws IOException {
-      String response = "This is the response";
-      t.sendResponseHeaders(200, response.length());
-      OutputStream os = t.getResponseBody();
-      os.write(response.getBytes());
-      os.close();
-    }
+  public static void main(String[] args) throws IOException {
+    final HttpServer server = startServer();
+    System.out.println(String.format("Running on ", BASE_URI));
+    System.in.read();
+    server.shutdown();
+    System.out.println("Server halted.");
   }
 }
